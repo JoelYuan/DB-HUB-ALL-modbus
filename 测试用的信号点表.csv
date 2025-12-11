@@ -1,0 +1,11 @@
+设备名称,设备类型,COM端口,IP地址,端口,波特率,从站地址,寄存器地址,数据标签名,读取周期,操作类型
+water_meter_01,rtu,COM1,,0,9600,1,30000,register_0000,500,read
+water_meter_01,rtu,COM1,,0,9600,1,30001,register_0001,500,read
+water_meter_01,rtu,COM1,,0,9600,1,10100,flag_0000,300,read
+water_meter_01,rtu,COM1,,0,9600,1,00000,flag_0001,0,write
+water_meter_01,rtu,COM1,,0,9600,1,40010,register_0002,0,write
+local_test_tcp,tcp,,127.0.0.1,502,0,1,40001,register_0003,500,read
+local_test_tcp,tcp,,127.0.0.1,502,0,1,40002,register_0004,500,read
+local_test_tcp,tcp,,127.0.0.1,502,0,1,30001,register_0005,1000,read
+local_test_tcp,tcp,,127.0.0.1,502,0,1,40005,register_0001,0,write
+local_test_tcp,tcp,,127.0.0.1,502,0,1,00010,flag_0000,0,write

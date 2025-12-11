@@ -1,0 +1,98 @@
+# 全局配置
+# Global Configuration
+global:
+  poll_interval_ms: 20        # 调度心跳（每设备循环间隔，单位：毫秒）
+  retry_times: 3              # 通信失败重试次数
+  db_path: data.db            # 数据库文件路径
+  web_port: 8080              # Web服务端口
+
+#测试——在RTU站取值赋给register_0001，然后在TCP站写进来register_0001，是否能传递
+# com1口的站点1，波特率9600
+# 读：
+# 30000，存到 register_0000
+# 30001，存到 register_0001
+# 10100，存到flag_0000
+# 写：
+# 取值flag_0001，写到00000
+# 取值register_0002，写到40010
+
+# IP为127.0.0.1的TCP站点
+# 读：
+# 40001，存到register_0003
+# 40002，存到register_0004
+# 30001，存到register_0005
+# 写：
+# 取值register_0001，写到40005
+# 取值flag_0000，写到00010
+
+# 设备列表
+devices:
+
+  # 水表设备 - RTU类型
+  # Water Meter Device - RTU Type
+  - name: water_meter_01      # 设备名称
+    type: rtu                 # 设备类型：rtu/tcp
+    port: COM1                # 串口端口
+    baud: 9600                # 波特率
+    slave: 1                  # 从站地址
+
+    # 读操作配置
+    # Read Operations Configuration
+    read:
+      - fc: 4              # 功能码：4-输入寄存器3
+        addr: 0            # 起始地址
+        tag: register_0000 # 数据标签名
+        period_ms: 500     # 读取周期（毫秒）
+      - fc: 4              # 功能码：4-输入寄存器
+        addr: 1            # 起始地址
+        tag: register_0001 # 数据标签名
+        period_ms: 500     # 读取周期（毫秒）
+
+      - fc: 2              # 功能码：2-离散输入
+        addr: 100          # 起始地址
+        tag: flag_0000     # 数据标签名
+        period_ms: 300     # 读取周期（毫秒）
+
+    # 写操作配置
+    # Write Operations Configuration
+    write:
+      - fc: 5              # 功能码：5-写线圈
+        addr: 0            # 地址
+        tag: flag_0001     # 数据标签名（写此标签的当前值）
+      - fc: 6              # 功能码：6-写单寄存器
+        addr: 10           # 地址
+        tag: register_0002 # 数据标签名
+
+  # 本地测试设备 - TCP类型（127.0.0.1）
+  # Local Test Device - TCP Type (127.0.0.1)
+  - name: local_test_tcp      # 设备名称
+    type: tcp                 # 设备类型：rtu/tcp
+    address: 127.0.0.1:502    # TCP地址和端口（本地测试）
+    unit: 1                   # 从站地址
+
+    # 读操作配置
+    # Read Operations Configuration
+    read:
+      - fc: 3              # 功能码：3-保持寄存器
+        addr: 1            # 起始地址
+        tag: register_0003 # 数据标签名
+        period_ms: 500     # 读取周期（毫秒）
+      - fc: 3              # 功能码：3-保持寄存器
+        addr: 2            # 起始地址
+        tag: register_0004 # 数据标签名
+        period_ms: 500     # 读取周期（毫秒）
+
+      - fc: 4              # 功能码：4-输入寄存器
+        addr: 1            # 起始地址
+        tag: register_0005 # 数据标签名
+        period_ms: 1000     # 读取周期（毫秒）
+
+    # 写操作配置
+    # Write Operations Configuration
+    write:
+      - fc: 6              # 功能码：6-写单寄存器
+        addr: 5            # 地址
+        tag: register_0001  # 数据标签名
+      - fc: 5              # 功能码：5-写线圈
+        addr: 10           # 地址
+        tag: flag_0000     # 数据标签名
